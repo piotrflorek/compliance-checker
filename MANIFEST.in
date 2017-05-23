@@ -1,5 +1,6 @@
-include *.txt
-include README.md
+include requirements.txt
+include test-requirements.txt
+include README.rst
 include LICENSE
 include compliance_checker/data/*.json
 include compliance_checker/data/*.xml
