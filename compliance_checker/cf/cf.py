@@ -58,16 +58,16 @@ class CFBaseCheck(BaseCheck):
     register_checker = True
     _cc_spec = 'cf'
     # TODO: break out into subclasses once CF-1.7 is a working standard
-    _cc_spec_version = '1.6'
+    _cc_spec_version = '1.7'
     _cc_description = 'Climate and Forecast Conventions (CF)'
     _cc_url = 'http://cfconventions.org'
 
     """
-    CF Convention Checker (1.6)
+    CF Convention Checker (1.7)
 
     These checks are translated documents:
-        http://cf-pcmdi.llnl.gov/documents/cf-conventions/1.6/cf-conventions.html
-        http://cf-pcmdi.llnl.gov/conformance/requirements-and-recommendations/1.6/
+        http://cfconventions.org/Data/cf-conventions/cf-conventions-1.7/cf-conventions.html
+        http://cfconventions.org/Data/cf-documents/requirements-recommendations/requirements-recommendations-1.7.html
     """
 
     def __init__(self):
