@@ -735,33 +735,30 @@ class CFBaseCheck(BaseCheck):
 
         return valid_fill_range.to_result()
 
-    def check_conventions_are_cf_16(self, ds):
+    def check_conventions_are_cf_17(self, ds):
         '''
-        Check the global attribute conventions to contain CF-1.6
+        Check the global attribute conventions to contain CF-1.7
 
         CF §2.6.1 the NUG defined global attribute Conventions to the string
-        value "CF-1.6"
+        value "CF-1.7 CMIP-6.0"
 
         :param netCDF4.Dataset ds: An open netCDF dataset
         :rtype: compliance_checker.base.Result
         '''
 
-        valid = False
-        reasoning = []
+        valid_conventions = ['CF-1.7', 'CMIP-6.0']
         if hasattr(ds, 'Conventions'):
             conventions = regex.split(',|\s+', getattr(ds, 'Conventions', ''))
-            for convention in conventions:
-                if convention == 'CF-1.6':
-                    valid = True
-                    break
+            if any((c.strip() in valid_conventions for c in conventions)):
+                valid = True
+                reasoning = []
             else:
-                reasoning = ['Conventions global attribute does not contain '
-                             '"CF-1.6". The CF Checker only supports CF-1.6 '
-                             'at this time.']
+                valid = False
+                reasoning = ['Conventions global attribute does not contain "CF-1.7" or "CMIP-6.0"']
         else:
             valid = False
             reasoning = ['Conventions field is not present']
-        return Result(BaseCheck.MEDIUM, valid, '§2.6.1 Global Attribute Conventions includes CF-1.6', msgs=reasoning)
+        return Result(BaseCheck.MEDIUM, valid, '§2.6.1 Global Attribute Conventions includes CF-1.7', msgs=reasoning)
 
     def check_convention_globals(self, ds):
         '''
