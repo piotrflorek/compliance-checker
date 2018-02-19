@@ -740,13 +740,13 @@ class CFBaseCheck(BaseCheck):
         Check the global attribute conventions to contain CF-1.7
 
         CF §2.6.1 the NUG defined global attribute Conventions to the string
-        value "CF-1.7 CMIP-6.0"
+        value "CF-1.7 CMIP-6.2"
 
         :param netCDF4.Dataset ds: An open netCDF dataset
         :rtype: compliance_checker.base.Result
         '''
 
-        valid_conventions = ['CF-1.7', 'CMIP-6.0']
+        valid_conventions = ['CF-1.7', 'CMIP-6.2']
         if hasattr(ds, 'Conventions'):
             conventions = regex.split(',|\s+', getattr(ds, 'Conventions', ''))
             if any((c.strip() in valid_conventions for c in conventions)):
@@ -754,7 +754,7 @@ class CFBaseCheck(BaseCheck):
                 reasoning = []
             else:
                 valid = False
-                reasoning = ['Conventions global attribute does not contain "CF-1.7" or "CMIP-6.0"']
+                reasoning = ['Conventions global attribute does not contain "CF-1.7" or "CMIP-6.2"']
         else:
             valid = False
             reasoning = ['Conventions field is not present']
