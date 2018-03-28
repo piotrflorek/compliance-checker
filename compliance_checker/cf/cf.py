@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, division, print_function
 from compliance_checker.base import BaseCheck, BaseNCCheck, Result, TestCtx
@@ -13,7 +12,7 @@ from collections import defaultdict
 from warnings import warn
 import numpy as np
 import os
-import regex
+import re
 import sys
 
 import logging
@@ -397,7 +396,7 @@ class CFBaseCheck(BaseCheck):
             '_Unsigned'
         ]
 
-        rname = regex.compile("^[A-Za-z][A-Za-z0-9_]*$")
+        rname = re.compile("^[A-Za-z][A-Za-z0-9_]*$")
 
         for name, variable in ds.variables.items():
             variable_naming.assert_true(rname.match(name) is not None,
@@ -674,7 +673,7 @@ class CFBaseCheck(BaseCheck):
         :return: Returns True if the dimensions are in order U*, T, Z, Y, X,
                  False otherwise
         '''
-        regx = regex.compile(r'^L?I?U*T?Z?(?:(?:Y?X?)|(?:C?)|(?:A+))$')
+        regx = re.compile(r'^L?I?U*T?Z?(?:(?:Y?X?)|(?:C?)|(?:A+))$')
         dimension_string = ''.join(dimension_order)
         return regx.match(dimension_string) is not None
 
@@ -749,7 +748,7 @@ class CFBaseCheck(BaseCheck):
         valid = False
         reasoning = []
         if hasattr(ds, 'Conventions'):
-            conventions = regex.split(',|\s+', getattr(ds, 'Conventions', ''))
+            conventions = re.split(',|\s+', getattr(ds, 'Conventions', ''))
             for convention in conventions:
                 if convention == 'CF-1.6':
                     valid = True
@@ -1394,7 +1393,7 @@ class CFBaseCheck(BaseCheck):
         valid_meanings.assert_true(len(flag_meanings) > 0,
                                    "flag_meanings can't be empty")
 
-        flag_regx = regex.compile("^[0-9A-Za-z_\-.+@]+$")
+        flag_regx = re.compile("^[0-9A-Za-z_\-.+@]+$")
         meanings = flag_meanings.split()
         for meaning in meanings:
             if flag_regx.match(meaning) is None:
@@ -1807,7 +1806,7 @@ class CFBaseCheck(BaseCheck):
         # The pattern for formula terms is always component: variable_name
         # the regex grouping always has component names in even positions and
         # the corresponding variable name in even positions.
-        matches = regex.findall(r'([A-Za-z][A-Za-z0-9_]*: )([A-Za-z][A-Za-z0-9_]*)',
+        matches = re.findall(r'([A-Za-z][A-Za-z0-9_]*: )([A-Za-z][A-Za-z0-9_]*)',
                                 variable.formula_terms)
         terms = set(m[0][:-2] for m in matches)
         # get the variables named in the formula terms and check if any
@@ -2619,7 +2618,7 @@ class CFBaseCheck(BaseCheck):
                                                    c is not None)
         for var in variables:
             search_str = '^(?:area|volume): (\w+)$'
-            search_res = regex.search(search_str, var.cell_measures)
+            search_res = re.search(search_str, var.cell_measures)
             if not search_res:
                 valid = False
                 reasoning.append("The cell_measures attribute for variable {} "
@@ -2704,7 +2703,7 @@ class CFBaseCheck(BaseCheck):
         }
 
         ret_val = []
-        psep = regex.compile(r'(?P<vars>\w+: )+(?P<method>\w+) ?(?P<where>where (?P<wtypevar>\w+) '
+        psep = re.compile(r'(?P<vars>\w+: )+(?P<method>\w+) ?(?P<where>where (?P<wtypevar>\w+) '
                              '?(?P<over>over (?P<otypevar>\w+))?| ?)(?:\((?P<paren_contents>[^)]*)\))?')
 
         for var in ds.get_variables_by_attributes(cell_methods=lambda x: x is not None):
@@ -2715,7 +2714,7 @@ class CFBaseCheck(BaseCheck):
 
             valid_attribute = TestCtx(BaseCheck.HIGH,
                                       '§7.1 {} has a valid cell_methods attribute format'.format(var.name))
-            valid_attribute.assert_true(regex.match(psep, method) is not None,
+            valid_attribute.assert_true(re.match(psep, method) is not None,
                                         '"{}" is not a valid format for cell_methods attribute'
                                         ''.format(method))
             ret_val.append(valid_attribute.to_result())
@@ -2724,7 +2723,7 @@ class CFBaseCheck(BaseCheck):
                                        '§7.3 {} has valid names in cell_methods attribute'.format(var.name))
 
             # check that the name is valid
-            for match in regex.finditer(psep, method):
+            for match in re.finditer(psep, method):
                 # it is possible to have "var1: var2: ... varn: ...", so handle
                 # that case
                 for var_raw_str in match.captures('vars'):
@@ -2748,7 +2747,7 @@ class CFBaseCheck(BaseCheck):
             valid_cell_methods = TestCtx(BaseCheck.MEDIUM,
                                          '§7.3 {} has valid methods in cell_methods attribute'.format(var.name))
 
-            for match in regex.finditer(psep, method):
+            for match in re.finditer(psep, method):
                 # CF section 7.3 - "Case is not significant in the method name."
                 valid_cell_methods.assert_true(match.group('method').lower() in methods,
                                                '{}:cell_methods contains an invalid method: {}'
@@ -2756,7 +2755,7 @@ class CFBaseCheck(BaseCheck):
 
             ret_val.append(valid_cell_methods.to_result())
 
-            for match in regex.finditer(psep, method):
+            for match in re.finditer(psep, method):
                 if match.group('paren_contents') is not None:
                     # split along spaces followed by words with a colon
                     # not sure what to do if a comment contains a colon!
@@ -2786,12 +2785,12 @@ class CFBaseCheck(BaseCheck):
         # we need the count of the matches, and re.findall() only returns
         # groups if they are present and we wish to see if the entire match
         # object concatenated together is the same as the original string
-        pmatches = [m for m in regex.finditer(kv_pair_pat, paren_contents)]
+        pmatches = [m for m in re.finditer(kv_pair_pat, paren_contents)]
         for i, pmatch in enumerate(pmatches):
             keyword, val = pmatch.groups()
             if keyword == 'interval:':
                 valid_info.out_of += 2
-                interval_matches = regex.match(r'^\s*(?P<interval_number>\S+)\s+(?P<interval_units>\S+)\s*$', val)
+                interval_matches = re.match(r'^\s*(?P<interval_number>\S+)\s+(?P<interval_units>\S+)\s*$', val)
                 # attempt to get the number for the interval
                 if not interval_matches:
                     valid_info.messages.append('{}:cell_methods contains an interval specification that does not parse: "{}". Should be in format "interval: <number> <units>"'.format(var.name, val))
@@ -2949,7 +2948,7 @@ class CFBaseCheck(BaseCheck):
         for cell_method_var in ds.get_variables_by_attributes(cell_methods=lambda s: s is not
                                                               None):
             total_climate_count += 1
-            if not regex.search(re_string, cell_method_var.cell_methods):
+            if not re.search(re_string, cell_method_var.cell_methods):
                 reasoning.append('The "time: method within years/days over years/days" format is not correct in variable {}.'.format(cell_method_var.name))
             else:
                 valid_climate_count += 1

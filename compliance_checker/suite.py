@@ -13,8 +13,6 @@ from operator import itemgetter
 from netCDF4 import Dataset
 from lxml import etree as ET
 from compliance_checker.base import fix_return_value, Result, GenericFile
-from owslib.sos import SensorObservationService
-from owslib.swe.sensor.sml import SensorML
 from compliance_checker.protocols import opendap, netcdf, cdl
 try:
     from urlparse import urlparse
@@ -482,24 +480,6 @@ class CheckSuite(object):
             if res.children:
                 self.reasoning_routine(res.children, indent + 1, False)
 
-    def process_doc(self, doc):
-        """
-        Attempt to parse an xml string conforming to either an SOS or SensorML
-        dataset and return the results
-        """
-        xml_doc = ET.fromstring(doc)
-        if xml_doc.tag == "{http://www.opengis.net/sos/1.0}Capabilities":
-            ds = SensorObservationService(None, xml=doc)
-            # SensorObservationService does not store the etree doc root,
-            # so maybe use monkey patching here for now?
-            ds._root = xml_doc
-
-        elif xml_doc.tag == "{http://www.opengis.net/sensorML/1.0.1}SensorML":
-            ds = SensorML(xml_doc)
-        else:
-            raise ValueError("Unrecognized XML root element: %s" % xml_doc.tag)
-        return ds
-
     def generate_dataset(self, cdl_path):
         '''
         Use ncgen to generate a netCDF file from a .cdl file
@@ -537,13 +517,7 @@ class CheckSuite(object):
         if opendap.is_opendap(ds_str):
             return Dataset(ds_str)
         else:
-            # Check if the HTTP response is XML, if it is, it's likely SOS so
-            # we'll attempt to parse the response as SOS
-            response = requests.get(ds_str, allow_redirects=True)
-            if 'text/xml' in response.headers['content-type']:
-                return self.process_doc(response.content)
-
-            raise ValueError("Unknown service with content-type: {}".format(response.headers['content-type']))
+            raise ValueError("Unknown service")
 
     def load_local_dataset(self, ds_str):
         '''

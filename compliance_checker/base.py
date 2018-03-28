@@ -9,19 +9,9 @@ from functools import wraps
 import pprint
 
 from netCDF4 import Dataset
-from owslib.swe.observation.sos100 import SensorObservationService_1_0_0
-from owslib.swe.sensor.sml import SensorML
-from owslib.namespaces import Namespaces
 from compliance_checker import __version__
 from lxml import etree
 import sys
-
-
-def get_namespaces():
-    n = Namespaces()
-    ns = n.get_namespaces(["ogc", "sml", "gml", "sos", "swe", "xlink"])
-    ns["ows"] = n.get_namespace("ows110")
-    return ns
 
 
 # Simple class for Generic File type (default to this if file not recognised)
@@ -77,20 +67,6 @@ class BaseNCCheck(object):
     @classmethod
     def std_check(cls, dataset, name):
         return name in dataset.ncattrs()
-
-
-class BaseSOSGCCheck(object):
-    """
-    Base class for SOS-GetCapabilities supporting Check Suites.
-    """
-    supported_ds = [SensorObservationService_1_0_0]
-
-
-class BaseSOSDSCheck(object):
-    """
-    Base class for SOS-DescribeSensor supporting Check Suites.
-    """
-    supported_ds = [SensorML]
 
 
 class Result(object):

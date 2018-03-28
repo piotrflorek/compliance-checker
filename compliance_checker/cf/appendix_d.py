@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 '''
 Appendix D compliance support for CF 1.6
 

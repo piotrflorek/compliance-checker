@@ -48,14 +48,9 @@ setup(
         ],
         'compliance_checker.suites': [
             'cf = compliance_checker.cf.cf:CFBaseCheck',
-            'acdd-1.1 = compliance_checker.acdd:ACDD1_1Check',
-            'acdd-1.3 = compliance_checker.acdd:ACDD1_3Check',
-            'ioos_sos = compliance_checker.ioos:IOOSBaseSOSCheck',
-            'ioos-0.1 = compliance_checker.ioos:IOOS0_1Check',
-            'ioos-1.1 = compliance_checker.ioos:IOOS1_1Check',
         ]
     },
     package_data         = {
-        'compliance_checker': ['data/*.xml', 'tests/data/*.nc', 'tests/data/*.cdl', 'tests/data/non-comp/*.cdl', 'data/templates/*.j2'],
+        'compliance_checker': ['tests/data/*.nc'],
     }
 )

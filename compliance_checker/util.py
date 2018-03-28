@@ -1,8 +1,8 @@
 """
 General purpose utility functions to aid in compliance checking tasks
 """
-import isodate
-import pendulum
+import re
+import datetime
 
 
 def isstring(obj):
@@ -15,10 +15,12 @@ def isstring(obj):
 def datetime_is_iso(date_str):
     """Attempts to parse a date formatted in ISO 8601 format"""
     try:
-        if len(date_str) > 10:
-            dt = isodate.parse_datetime(date_str)
+        if len(date_str) > 20:
+            dt = datetime.datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S.Z")
+        elif len(date_str) > 10:
+            dt = datetime.datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S")
         else:
-            dt = isodate.parse_date(date_str)
+            dt = datetime.datetime.strptime(date_str, "%Y-%m-%d")
         return True, []
     except:  # Any error qualifies as not ISO format
         return False, ['Datetime provided is not in a valid ISO 8601 format']
@@ -31,5 +33,5 @@ def dateparse(date_str):
     :param str date_str: An ISO-8601 string
     '''
 
-    return pendulum.parse(date_str)
+    return datetime.datetime(*map(int, re.split('[^\d]', s)[:-1]))
 

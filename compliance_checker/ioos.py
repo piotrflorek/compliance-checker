@@ -2,8 +2,7 @@
 Check for IOOS-approved attributes
 '''
 from __future__ import unicode_literals
-from compliance_checker.base import BaseCheck, BaseNCCheck, BaseSOSGCCheck, BaseSOSDSCheck, check_has, Result
-from owslib.namespaces import Namespaces
+from compliance_checker.base import BaseCheck, BaseNCCheck, check_has, Result
 from lxml.etree import XPath
 from compliance_checker.cfutil import get_geophysical_variables
 from compliance_checker.cf.cf import CFBaseCheck
