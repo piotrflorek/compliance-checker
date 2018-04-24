@@ -10,7 +10,7 @@ import pprint
 
 from netCDF4 import Dataset
 from compliance_checker import __version__
-from lxml import etree
+# from lxml import etree
 import sys
 
 
@@ -220,12 +220,12 @@ def attr_check(l, ds, priority, ret_val):
 
             ret_val.append(Result(priority, (res, 2), name, msgs))
         # if we have an XPath expression, call it on the document
-        elif type(other) is etree.XPath:
+        # elif type(other) is etree.XPath:
             # TODO: store tree instead of creating it each time?
-            res = xpath_check(ds._root, other)
-            if not res:
-                msgs = ["XPath for {} not found".format(name)]
-            ret_val.append(Result(priority, res, name, msgs))
+        #    res = xpath_check(ds._root, other)
+        #    if not res:
+        #        msgs = ["XPath for {} not found".format(name)]
+        #    ret_val.append(Result(priority, res, name, msgs))
         # if the attribute is a function, call it
         # right now only supports single attribute
         # important note: current magic approach uses all functions

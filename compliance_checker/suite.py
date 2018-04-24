@@ -11,7 +11,6 @@ import inspect
 import itertools
 from operator import itemgetter
 from netCDF4 import Dataset
-from lxml import etree as ET
 from compliance_checker.base import fix_return_value, Result, GenericFile
 from compliance_checker.protocols import opendap, netcdf, cdl
 try:
@@ -19,7 +18,6 @@ try:
 except ImportError:
     from urllib.parse import urlparse
 from datetime import datetime
-import requests
 import textwrap
 import codecs
 
