@@ -44,21 +44,6 @@ class TestCLI(TestCase):
             return "%s ( %s )" % (name[-1], '.'.join(name[:-2]) + ":" + '.'.join(name[-2:]))
     __str__ = __repr__
 
-    def test_unicode_acdd_html(self):
-        '''
-        Tests that the checker is capable of producing HTML with unicode characters
-        '''
-        return_value, errors = ComplianceChecker.run_checker(
-            ds_loc=STATIC_FILES['2dim'],
-            verbose=0,
-            criteria='strict',
-            checker_names=['acdd'],
-            output_filename=self.path,
-            output_format='html'
-        )
-
-        assert os.stat(self.path).st_size > 0
-
     def test_unicode_cf_html(self):
         '''
         Tests that the CF checker can produce HTML output with unicode characters
@@ -100,7 +85,7 @@ class TestCLI(TestCase):
             ds_loc=STATIC_FILES['conv_bad'],
             verbose=0,
             criteria='strict',
-            checker_names=['acdd', 'cf'],
+            checker_names=['cf'],
             output_filename=self.path,
             output_format='json'
         )
@@ -109,7 +94,6 @@ class TestCLI(TestCase):
         with open(self.path) as f:
             r = json.load(f)
             assert 'cf' in r
-            assert 'acdd' in r
 
     def test_multiple_json_output_stdout(self):
         '''
@@ -123,12 +107,11 @@ class TestCLI(TestCase):
                 ds_loc=STATIC_FILES['conv_bad'],
                 verbose=0,
                 criteria='strict',
-                checker_names=['acdd', 'cf'],
+                checker_names=['cf'],
                 output_filename='-',
                 output_format='json'
             )
             r = json.loads(fake_stdout.getvalue().strip())
-            assert 'acdd' in r
             assert 'cf' in r
         finally:
             sys.stdout = saved
@@ -163,7 +146,7 @@ class TestCLI(TestCase):
             ds_loc=STATIC_FILES['conv_bad'],
             verbose=0,
             criteria='strict',
-            checker_names=['acdd', 'cf'],
+            checker_names=['cf'],
             output_filename=self.path,
             output_format='text'
         )

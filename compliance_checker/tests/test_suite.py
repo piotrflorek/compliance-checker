@@ -33,14 +33,6 @@ class TestSuite(unittest.TestCase):
             return "%s ( %s )" % (name[-1], '.'.join(name[:-2]) + ":" + '.'.join(name[-2:]))
     __str__ = __repr__
 
-    def test_suite(self):
-        # BWA: what's the purpose of this test?  Just to see if the suite
-        # runs without errors?
-        cs = CheckSuite()
-        cs.load_all_available_checkers()
-        ds = cs.load_dataset(static_files['2dim'])
-        cs.run(ds, 'acdd')
-
     def test_unicode_formatting(self):
         cs = CheckSuite()
         cs.load_all_available_checkers()
@@ -53,16 +45,6 @@ class TestSuite(unittest.TestCase):
             score_list, points, out_of = cs.standard_output(limit, checker, groups)
             # This asserts that print is able to generate all of the unicode output
             cs.non_verbose_output_generation(score_list, groups, limit, points, out_of)
-
-    def test_skip_checks(self):
-        """Tests that checks are properly skipped when specified"""
-        cs = CheckSuite()
-        cs.load_all_available_checkers()
-        ds = cs.load_dataset(static_files['2dim'])
-        # exclude title from the check attributes
-        score_groups = cs.run(ds, ['check_high'], 'acdd')
-        assert all(sg.name not in {'Conventions', 'title', 'keywords',
-                                   'summary'} for sg in score_groups['acdd'][0])
 
     def test_group_func(self):
         # This is checking for issue #183, where group_func results in

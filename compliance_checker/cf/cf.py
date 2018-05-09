@@ -2726,7 +2726,7 @@ class CFBaseCheck(BaseCheck):
             for match in re.finditer(psep, method):
                 # it is possible to have "var1: var2: ... varn: ...", so handle
                 # that case
-                for var_raw_str in match.captures('vars'):
+                for var_raw_str in match.group('vars'):
                     # strip off the ' :' at the end of each match
                     var_str = var_raw_str[:-2]
                     if (var_str in var.dimensions or
