@@ -1,4 +1,4 @@
-lxml>=3.2.1
 cf_units
 requests>=2.2.1
 Jinja2>=2.7.3
+lxml
