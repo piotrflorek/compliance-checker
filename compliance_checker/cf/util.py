@@ -6,7 +6,7 @@ import os
 import sys
 from copy import deepcopy
 from collections import defaultdict
-from lxml import etree
+import xml.etree.ElementTree as ET
 from cf_units import Unit
 from netCDF4 import Dimension, Variable
 from pkgutil import get_data
@@ -253,7 +253,7 @@ class StandardNameTable(object):
             self.description     = self._get(entrynode, 'description')
 
         def _get(self, entrynode, attrname, required=False):
-            vals = entrynode.xpath(attrname)
+            vals = entrynode.findall(attrname)
             if len(vals) > 1:
                 raise Exception("Multiple attrs (%s) found" % attrname)
             elif required and len(vals) == 0:
@@ -268,13 +268,12 @@ class StandardNameTable(object):
         else:
             resource_text = get_data("compliance_checker", "data/cf-standard-name-table.xml")
 
-        parser = etree.XMLParser(remove_blank_text=True)
-        self._root = etree.fromstring(resource_text, parser)
+        self._root = ET.fromstring(resource_text.encode('utf8'))
 
         # generate and save a list of all standard names in file
         self._names = [node.get('id') for node in self._root.iter('entry')]
         self._aliases = [node.get('id') for node in self._root.iter('alias')]
-        self._version = self._root.xpath('version_number')[0].text
+        self._version = [i.text for i in self._root.iter('version_number')][0]
 
     def __len__(self):
         return len(self._names) + len(self._aliases)
@@ -285,7 +284,7 @@ class StandardNameTable(object):
 
         if key in self._aliases:
             idx = self._aliases.index(key)
-            entryids = self._root.xpath('alias')[idx].xpath('entry_id')
+            entryids = self._root.findall('alias')[idx].findall('entry_id')
 
             if len(entryids) != 1:
                 raise Exception("Inconsistency in standard name table, could not lookup alias for %s" % key)
@@ -296,7 +295,7 @@ class StandardNameTable(object):
             raise KeyError("%s not found in standard name table" % key)
 
         idx = self._names.index(key)
-        entry = self.NameEntry(self._root.xpath('entry')[idx])
+        entry = self.NameEntry(self._root.findall('entry')[idx])
         return entry
 
     def get(self, key, default=None):
