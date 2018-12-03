@@ -1,5 +1,4 @@
 from __future__ import print_function
-import io
 import itertools
 import requests
 import os
@@ -263,12 +262,12 @@ class StandardNameTable(object):
 
     def __init__(self, cached_location=None):
         if cached_location:
-            with io.open(cached_location, 'r', encoding='utf-8') as fp:
+            with open(cached_location, 'r') as fp:
                 resource_text = fp.read()
         else:
             resource_text = get_data("compliance_checker", "data/cf-standard-name-table.xml")
 
-        self._root = ET.fromstring(resource_text.encode('utf8'))
+        self._root = ET.fromstring(resource_text)
 
         # generate and save a list of all standard names in file
         self._names = [node.get('id') for node in self._root.iter('entry')]
