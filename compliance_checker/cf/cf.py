@@ -2555,10 +2555,6 @@ class CFBaseCheck(BaseCheck):
                 boundary_variable = ds.variables[boundary_variable_name]
             # The number of dimensions in the bounds variable should always be
             # the number of dimensions in the referring variable + 1
-            if (boundary_variable.ndim < 2):
-                valid = False
-                reasoning.append('Boundary variable {} should have at least two'
-                                 'dimensions to enclose the base case of a one dimensionsal variable'.format(boundary_variable.name))
             if (boundary_variable.ndim != variable.ndim + 1):
                 valid = False
                 reasoning.append('The number of dimensions of the variable %s is %s, but the '
