@@ -2417,6 +2417,7 @@ class CFBaseCheck(BaseCheck):
             'aral_sea',
             'arctic_ocean',
             'asia',
+            'atlantic_arctic_ocean',
             'atlantic_ocean',
             'australia',
             'baltic_sea',
@@ -2451,6 +2452,7 @@ class CFBaseCheck(BaseCheck):
             'gulf_of_mexico',
             'hudson_bay',
             'iceland_faroe_channel',
+            'indian_pacific_ocean',
             'indian_ocean',
             'indonesian_throughflow',
             'indo_pacific_ocean',
@@ -2482,13 +2484,19 @@ class CFBaseCheck(BaseCheck):
         ]
 
         for var in ds.get_variables_by_attributes(standard_name='region'):
-            valid_region = TestCtx(BaseCheck.MEDIUM,
-                                   "§6.1.1 Geographic region specified by {} is valid"
-                                   "".format(var.name))
-            valid_region.assert_true(''.join(var[:].astype(str)).lower() in region_list,
-                                     "{} is not a valid region"
-                                     "".format(''.join(var[:].astype(str))))
-            ret_val.append(valid_region.to_result())
+            regions = var[:]
+            if np.ma.isMA(regions):
+                regions = regions.data.tolist()
+            if type(regions[0]) is not list:
+                regions = [regions]
+            for region in regions:
+                valid_region = TestCtx(BaseCheck.MEDIUM,
+                                       "§6.1.1 Geographic region specified by {} is valid"
+                                       "".format(var.name))
+                valid_region.assert_true(''.join(region).lower() in region_list,
+                                         "{} is not a valid region"
+                                         "".format(''.join(region)))
+                ret_val.append(valid_region.to_result())
         return ret_val
 
     ###############################################################################
