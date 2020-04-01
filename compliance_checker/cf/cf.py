@@ -2487,11 +2487,18 @@ class CFBaseCheck(BaseCheck):
 
         for var in ds.get_variables_by_attributes(standard_name='region'):
             regions = var[:]
+            # if `regions` is a masked array, convert it to a list
             if np.ma.isMA(regions):
                 regions = regions.data.tolist()
+            # now we want to process a list of strings in a consistent way
+
+            # if the first element of `regions` is not a list
+            # (which means that `regions` is a string), put the variable into a list
             if type(regions[0]) is not list:
                 regions = [regions]
+            # now `regions` contains a list of strings
             for region in regions:
+                # validate each region
                 valid_region = TestCtx(BaseCheck.MEDIUM,
                                        "§6.1.1 Geographic region specified by {} is valid"
                                        "".format(var.name))
