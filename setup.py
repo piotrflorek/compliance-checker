@@ -1,4 +1,4 @@
-from __future__ import with_statement
+
 from setuptools import setup, find_packages
 from compliance_checker import __version__
 

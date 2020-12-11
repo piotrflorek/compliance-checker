@@ -1,8 +1,8 @@
 """
 Compliance Checker suite runner
 """
-from __future__ import print_function
-from __future__ import unicode_literals
+
+
 
 import os
 import sys
@@ -14,7 +14,7 @@ from netCDF4 import Dataset
 from compliance_checker.base import fix_return_value, Result, GenericFile
 from compliance_checker.protocols import opendap, netcdf, cdl
 try:
-    from urlparse import urlparse
+    from urllib.parse import urlparse
 except ImportError:
     from urllib.parse import urlparse
 from datetime import datetime
@@ -264,7 +264,7 @@ class CheckSuite(object):
         if isinstance(o, (list, tuple)):
             return [self.serialize(i) for i in o]
         if isinstance(o, dict):
-            return {k: self.serialize(v) for k, v in o.items()}
+            return {k: self.serialize(v) for k, v in list(o.items())}
         if isinstance(o, datetime):
             return o.isoformat()
         if isinstance(o, Result):

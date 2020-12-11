@@ -11,9 +11,9 @@ import re
 
 # For python2/python3 support
 try:
-    basestring
+    str
 except NameError:
-    basestring = str
+    str = str
 
 
 _UNITLESS_DB = None
@@ -199,7 +199,7 @@ def get_auxiliary_coordinate_variables(ds):
     '''
     aux_vars = []
     # get any variables referecned by the coordinates attribute
-    for ncvar in ds.get_variables_by_attributes(coordinates=lambda x: isinstance(x, basestring)):
+    for ncvar in ds.get_variables_by_attributes(coordinates=lambda x: isinstance(x, str)):
         # split the coordinates into individual variable names
         referenced_variables = ncvar.coordinates.split(' ')
         # if the variable names exist, add them
@@ -295,7 +295,7 @@ def get_z_variable(nc):
     for var in z_variables:
         ncvar = nc.variables[var]
         units = getattr(ncvar, 'units', None)
-        if isinstance(units, basestring):
+        if isinstance(units, str):
             if units_convertible(units, 'bar'):
                 return var
             if units_convertible(units, 'm'):
@@ -331,7 +331,7 @@ def get_z_variables(nc):
         if units is not None:
             if units_convertible(units, 'bar'):
                 z_variables.append(coord_name)
-            elif isinstance(positive, basestring):
+            elif isinstance(positive, str):
                 if positive.lower() in ['up', 'down']:
                     z_variables.append(coord_name)
         # if axis='Z' we're good
@@ -401,7 +401,7 @@ def get_true_latitude_variables(nc):
         units = getattr(nc.variables[lat], "units", None)
         if standard_name == 'latitude':
             true_lats.append(lat)
-        elif isinstance(units, basestring) and units.lower() in VALID_LAT_UNITS:
+        elif isinstance(units, str) and units.lower() in VALID_LAT_UNITS:
             true_lats.append(lat)
     return true_lats
 
@@ -462,7 +462,7 @@ def get_true_longitude_variables(nc):
         units = getattr(nc.variables[lon], "units", None)
         if standard_name == 'longitude':
             true_lons.append(lon)
-        elif isinstance(units, basestring) and units.lower() in VALID_LON_UNITS:
+        elif isinstance(units, str) and units.lower() in VALID_LON_UNITS:
             true_lons.append(lon)
     return true_lons
 
@@ -552,7 +552,7 @@ def get_time_variables(ds):
             time_variables.append(variable.name)
 
     regx = r'^(?:day|d|hour|hr|h|minute|min|second|s)s? since .*$'
-    for variable in ds.get_variables_by_attributes(units=lambda x: isinstance(x, basestring)):
+    for variable in ds.get_variables_by_attributes(units=lambda x: isinstance(x, str)):
         if re.match(regx, variable.units) and variable.name not in time_variables:
             time_variables.append(variable.name)
 
@@ -602,9 +602,9 @@ def get_flag_variables(ds):
     :param netCDF4.Dataset ds: An open netCDF4 Dataset
     '''
     flag_variables = []
-    for name, ncvar in ds.variables.items():
+    for name, ncvar in list(ds.variables.items()):
         standard_name = getattr(ncvar, 'standard_name', None)
-        if isinstance(standard_name, basestring) and 'status_flag' in standard_name:
+        if isinstance(standard_name, str) and 'status_flag' in standard_name:
             flag_variables.append(name)
         elif hasattr(ncvar, 'flag_meanings'):
             flag_variables.append(name)
@@ -648,7 +648,7 @@ def get_axis_map(ds, variable):
     heights = get_z_variables(ds)
 
     coordinates = getattr(ds.variables[variable], "coordinates", None)
-    if not isinstance(coordinates, basestring):
+    if not isinstance(coordinates, str):
         coordinates = ''
 
     # For example
@@ -719,7 +719,7 @@ def is_compression_coordinate(ds, variable):
         return False
     # must have a string attribute compress
     compress = getattr(ds.variables[variable], 'compress', None)
-    if not isinstance(compress, basestring):
+    if not isinstance(compress, str):
         return False
     if not compress:
         return False

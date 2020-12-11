@@ -1,7 +1,7 @@
 '''
 Check for IOOS-approved attributes
 '''
-from __future__ import unicode_literals
+
 from compliance_checker.base import BaseCheck, BaseNCCheck, check_has, Result
 from lxml.etree import XPath
 from compliance_checker.cfutil import get_geophysical_variables
@@ -146,7 +146,7 @@ class IOOS0_1Check(IOOSNCCheck):
         msgs = []
         count = 0
 
-        for k, v in ds.variables.items():
+        for k, v in list(ds.variables.items()):
             if 'standard_name' in v.ncattrs():
                 count += 1
             else:
@@ -177,7 +177,7 @@ class IOOS0_1Check(IOOSNCCheck):
         msgs = []
         count = 0
 
-        for k, v in ds.variables.items():
+        for k, v in list(ds.variables.items()):
             if 'units' in v.ncattrs():
                 count += 1
             else:

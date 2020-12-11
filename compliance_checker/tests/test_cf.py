@@ -102,26 +102,26 @@ class TestCF(BaseTestCase):
         results = self.cf.check_naming_conventions(dataset)
         num_var = len(dataset.variables)
         result_dict = {result.name: result for result in results}
-        result = result_dict[u'§2.3 Naming Conventions for variables']
+        result = result_dict['§2.3 Naming Conventions for variables']
         assert result.value == (num_var, num_var)
 
         dataset = self.load_dataset(STATIC_FILES['bad'])
         results = self.cf.check_naming_conventions(dataset)
         result_dict = {result.name: result for result in results}
-        result = result_dict[u'§2.3 Naming Conventions for variables']
+        result = result_dict['§2.3 Naming Conventions for variables']
         assert result.value == (13, 14)
-        assert u'variable _poor_dim should begin with a letter and be composed of letters, digits, and underscores' == result.msgs[0]
+        assert 'variable _poor_dim should begin with a letter and be composed of letters, digits, and underscores' == result.msgs[0]
         score, out_of, messages = self.get_results(results)
         assert (score, out_of) == (49, 51)
 
         dataset = self.load_dataset(STATIC_FILES['chap2'])
         results = self.cf.check_naming_conventions(dataset)
         result_dict = {result.name: result for result in results}
-        result = result_dict[u'§2.3 Naming Conventions for variables']
+        result = result_dict['§2.3 Naming Conventions for variables']
         assert result.value == (6, 7)
-        assert u'variable bad name should begin with a letter and be composed of letters, digits, and underscores' == result.msgs[0]
+        assert 'variable bad name should begin with a letter and be composed of letters, digits, and underscores' == result.msgs[0]
 
-        result = result_dict[u'§2.3 Naming Conventions for attributes']
+        result = result_dict['§2.3 Naming Conventions for attributes']
         assert result.msgs[0] == ('attribute no_reason:_bad_attr should begin with a letter and be '
                                   'composed of letters, digits, and underscores')
         assert result.msgs[1] == ('global attribute bad global should begin with a letter and be '
@@ -158,7 +158,7 @@ class TestCF(BaseTestCase):
 
         dataset = self.load_dataset(STATIC_FILES['chap2'])
         result = self.cf.check_dimension_names(dataset)
-        assert result.msgs[0] == u'no_reason has two or more dimensions named time'
+        assert result.msgs[0] == 'no_reason has two or more dimensions named time'
 
     def test_check_dimension_order(self):
         """
@@ -275,20 +275,20 @@ class TestCF(BaseTestCase):
         dataset = self.load_dataset(STATIC_FILES['bad_data_type'])
         results = self.cf.check_standard_name(dataset)
         result_dict = {result.name: result for result in results}
-        result = result_dict[u'§3.2 Either long_name or standard_name is highly recommended for variable time']
+        result = result_dict['§3.2 Either long_name or standard_name is highly recommended for variable time']
         assert result.value == (0, 1)
         assert "Attribute long_name or/and standard_name is highly recommended for variable time" in result.msgs
 
-        result = result_dict[u'§3.2 Either long_name or standard_name is highly recommended for variable latitude']
+        result = result_dict['§3.2 Either long_name or standard_name is highly recommended for variable latitude']
         assert result.value == (0, 1)
         assert "Attribute long_name or/and standard_name is highly recommended for variable latitude" in result.msgs
         #assert 'variable latitude\'s attribute standard_name must be a non-empty string or it should define a long_name attribute.' == result.msgs[0]
 
-        result = result_dict[u'§3.3 Variable salinity has valid standard_name attribute']
+        result = result_dict['§3.3 Variable salinity has valid standard_name attribute']
         assert result.value == (1, 2)
         assert 'standard_name Chadwick is not defined in Standard Name Table' in result.msgs[0]
 
-        result = result_dict[u'§3.3 standard_name modifier for salinity is valid']
+        result = result_dict['§3.3 standard_name modifier for salinity is valid']
         assert result.value == (0, 1)
 
         assert len(result_dict) == 9
@@ -324,7 +324,7 @@ class TestCF(BaseTestCase):
         else:
             tuple_format = "(u'nv', u'lat')"
 
-        assert u"Boundary variable coordinates are in improper order: {}. Bounds-specific dimensions should be last".format(tuple_format) in messages
+        assert "Boundary variable coordinates are in improper order: {}. Bounds-specific dimensions should be last".format(tuple_format) in messages
 
         dataset = self.load_dataset(STATIC_FILES['bounds_bad_num_coords'])
         results = self.cf.check_cell_boundaries(dataset)
@@ -340,7 +340,7 @@ class TestCF(BaseTestCase):
             tuple_format = "('lon',)"
         else:
             tuple_format = "(u'lon',)"
-        assert u"Boundary variable dimension lon_bnds must have at least 2 elements to form a simplex/closed cell with previous dimensions {}.".format(tuple_format) in messages
+        assert "Boundary variable dimension lon_bnds must have at least 2 elements to form a simplex/closed cell with previous dimensions {}.".format(tuple_format) in messages
 
     def test_cell_measures(self):
         dataset = self.load_dataset(STATIC_FILES['cell_measure'])
@@ -376,13 +376,13 @@ class TestCF(BaseTestCase):
         dataset = self.load_dataset(STATIC_FILES['rutgers'])
         results = self.cf.check_ancillary_variables(dataset)
         result_dict = {result.name: result for result in results}
-        result = result_dict[u'§3.4 Ancillary Variables defined by temperature']
+        result = result_dict['§3.4 Ancillary Variables defined by temperature']
         assert result.value == (2, 2)
 
         dataset = self.load_dataset(STATIC_FILES['bad_reference'])
         results = self.cf.check_ancillary_variables(dataset)
         result_dict = {result.name: result for result in results}
-        result = result_dict[u'§3.4 Ancillary Variables defined by temp']
+        result = result_dict['§3.4 Ancillary Variables defined by temp']
         assert result.value == (1, 2)
         assert "temp_qc is not a variable in this dataset" == result.msgs[0]
 
@@ -413,17 +413,17 @@ class TestCF(BaseTestCase):
         dataset = self.load_dataset(STATIC_FILES['rutgers'])
         results = self.cf.check_flags(dataset)
         result_dict = {result.name: result for result in results}
-        result = result_dict[u'§3.5 time_qc is a valid flags variable']
+        result = result_dict['§3.5 time_qc is a valid flags variable']
         assert result.value == (1, 1)
-        result = result_dict[u'§3.5 flag_meanings for time_qc']
+        result = result_dict['§3.5 flag_meanings for time_qc']
         assert result.value == (3, 3)
-        result = result_dict[u'§3.5 flag_values for time_qc']
+        result = result_dict['§3.5 flag_values for time_qc']
         assert result.value == (4, 4)
         # lat(time);
         #   lat:flag_meanings = "";
-        result = result_dict[u'§3.5 lat is a valid flags variable']
+        result = result_dict['§3.5 lat is a valid flags variable']
         assert result.value == (0, 1)
-        result = result_dict[u'§3.5 flag_meanings for lat']
+        result = result_dict['§3.5 flag_meanings for lat']
         assert result.value == (2, 3)
         assert "flag_meanings can't be empty" == result.msgs[0]
 
@@ -448,13 +448,13 @@ class TestCF(BaseTestCase):
 
         # it's Degrees_E which is a valid udunits. The preferred units are
         # degrees_east and they are checked in the check_longitude check
-        result = result_dict[u'§3.1 Variable longitude\'s units are contained in UDUnits']
+        result = result_dict['§3.1 Variable longitude\'s units are contained in UDUnits']
         assert result.value == (1, 1)
 
-        result = result_dict[u'§3.1 Variable temp contains valid CF units']
+        result = result_dict['§3.1 Variable temp contains valid CF units']
         assert result.value == (3, 3)
 
-        result = result_dict[u'§3.1 Variable temp\'s units are contained in UDUnits']
+        result = result_dict['§3.1 Variable temp\'s units are contained in UDUnits']
         assert result.value == (1, 1)
 
         dataset = self.load_dataset(STATIC_FILES['bad_units'])
@@ -463,34 +463,34 @@ class TestCF(BaseTestCase):
 
         # time(time)
         #   time:units = "s"
-        result = result_dict[u'§3.1 Variable time contains valid CF units']
+        result = result_dict['§3.1 Variable time contains valid CF units']
         # They are valid and even valid UDUnits
         assert result.value == (3, 3)
-        result = result_dict[u"§3.1 Variable time's units are contained in UDUnits"]
+        result = result_dict["§3.1 Variable time's units are contained in UDUnits"]
         assert result.value == (1, 1)
 
         # But they are not appropriate for time
-        result = result_dict[u"§3.1 Variable time's units are appropriate for the standard_name time"]
+        result = result_dict["§3.1 Variable time's units are appropriate for the standard_name time"]
         assert result.value == (0, 1)
 
         # lat;
         #   lat:units = "degrees_E";
         # Should all be good
-        result = result_dict[u"§3.1 Variable lat's units are appropriate for the standard_name latitude"]
+        result = result_dict["§3.1 Variable lat's units are appropriate for the standard_name latitude"]
         assert result.value == (0, 1)
 
         # lev;
         #   lev:units = "level";
         # level is deprecated
-        result = result_dict[u"§3.1 Variable lev contains valid CF units"]
+        result = result_dict["§3.1 Variable lev contains valid CF units"]
         assert result.value == (2, 3)
         assert 'units for lev, "level" are deprecated by CF 1.6' in result.msgs
 
         # temp_count(time);
         #   temp_count:standard_name = "atmospheric_temperature number_of_observations";
         #   temp_count:units = "1";
-        result = result_dict[u"§3.1 Variable temp_count's units are appropriate for "
-                             u"the standard_name atmospheric_temperature number_of_observations"]
+        result = result_dict["§3.1 Variable temp_count's units are appropriate for "
+                             "the standard_name atmospheric_temperature number_of_observations"]
         assert result.value == (1, 1)
 
     def test_latitude(self):
@@ -510,31 +510,31 @@ class TestCF(BaseTestCase):
         result_dict = {result.name: result for result in results}
         scored, out_of, messages = self.get_results(results)
 
-        result = result_dict[u'§4.1 Latitude variable lat has required units attribute']
+        result = result_dict['§4.1 Latitude variable lat has required units attribute']
         assert result.value == (0, 1)
         assert result.msgs[0] == "latitude variable 'lat' must define units"
 
-        result = result_dict[u'§4.1 Latitude variable lat uses recommended units']
+        result = result_dict['§4.1 Latitude variable lat uses recommended units']
         assert result.value == (0, 1)
 
-        result = result_dict[u'§4.1 Latitude variable lat defines units using degrees_north']
+        result = result_dict['§4.1 Latitude variable lat defines units using degrees_north']
         assert result
         assert result.msgs[0] == "CF recommends latitude variable 'lat' to use units degrees_north"
 
-        result = result_dict[u'§4.1 Latitude variable lat defines either standard_name or axis']
+        result = result_dict['§4.1 Latitude variable lat defines either standard_name or axis']
         assert result.value == (1, 1)
 
-        result = result_dict[u'§4.1 Latitude variable lat_uv has required units attribute']
+        result = result_dict['§4.1 Latitude variable lat_uv has required units attribute']
         assert result.value == (1, 1)
 
-        result = result_dict[u'§4.1 Latitude variable lat_uv uses recommended units']
+        result = result_dict['§4.1 Latitude variable lat_uv uses recommended units']
         assert result.value == (1, 1)
 
-        result = result_dict[u'§4.1 Latitude variable lat_uv defines units using degrees_north']
+        result = result_dict['§4.1 Latitude variable lat_uv defines units using degrees_north']
         assert result
         assert result.msgs[0] == "CF recommends latitude variable 'lat_uv' to use units degrees_north"
 
-        result = result_dict[u'§4.1 Latitude variable lat_uv defines either standard_name or axis']
+        result = result_dict['§4.1 Latitude variable lat_uv defines either standard_name or axis']
         assert result.value == (1, 1)
 
         assert (scored, out_of) == (9, 12)
@@ -575,31 +575,31 @@ class TestCF(BaseTestCase):
         result_dict = {result.name: result for result in results}
         scored, out_of, messages = self.get_results(results)
 
-        result = result_dict[u'§4.1 Longitude variable lon has required units attribute']
+        result = result_dict['§4.1 Longitude variable lon has required units attribute']
         assert result.value == (0, 1)
         assert result.msgs[0] == "longitude variable 'lon' must define units"
 
-        result = result_dict[u'§4.1 Longitude variable lon uses recommended units']
+        result = result_dict['§4.1 Longitude variable lon uses recommended units']
         assert result.value == (0, 1)
 
-        result = result_dict[u'§4.1 Longitude variable lon defines units using degrees_east']
+        result = result_dict['§4.1 Longitude variable lon defines units using degrees_east']
         assert result
         assert result.msgs[0] == "CF recommends longitude variable 'lon' to use units degrees_east"
 
-        result = result_dict[u'§4.1 Longitude variable lon defines either standard_name or axis']
+        result = result_dict['§4.1 Longitude variable lon defines either standard_name or axis']
         assert result.value == (1, 1)
 
-        result = result_dict[u'§4.1 Longitude variable lon_uv has required units attribute']
+        result = result_dict['§4.1 Longitude variable lon_uv has required units attribute']
         assert result.value == (1, 1)
 
-        result = result_dict[u'§4.1 Longitude variable lon_uv uses recommended units']
+        result = result_dict['§4.1 Longitude variable lon_uv uses recommended units']
         assert result.value == (1, 1)
 
-        result = result_dict[u'§4.1 Longitude variable lon_uv defines units using degrees_east']
+        result = result_dict['§4.1 Longitude variable lon_uv defines units using degrees_east']
         assert result
         assert result.msgs[0] == "CF recommends longitude variable 'lon_uv' to use units degrees_east"
 
-        result = result_dict[u'§4.1 Longitude variable lon_uv defines either standard_name or axis']
+        result = result_dict['§4.1 Longitude variable lon_uv defines either standard_name or axis']
         assert result.value == (1, 1)
 
         assert (scored, out_of) == (9, 12)
@@ -662,13 +662,13 @@ class TestCF(BaseTestCase):
         dataset = self.load_dataset(STATIC_FILES['example-grid'])
         results = self.cf.check_dimensional_vertical_coordinate(dataset)
         assert len(results) == 1
-        assert results[0].name == u'§4.3.1 height is a valid vertical coordinate'
+        assert results[0].name == '§4.3.1 height is a valid vertical coordinate'
         assert results[0].value == (2, 2)
 
         dataset = self.load_dataset(STATIC_FILES['illegal-vertical'])
         results = self.cf.check_dimensional_vertical_coordinate(dataset)
         assert len(results) == 1
-        assert results[0].name == u'§4.3.1 z is a valid vertical coordinate'
+        assert results[0].name == '§4.3.1 z is a valid vertical coordinate'
         assert results[0].value == (0, 2)
         assert results[0].msgs[0] == 'units must be defined for vertical coordinates, there is no default'
         assert results[0].msgs[1] == ("vertical coordinates not defining pressure must include a positive attribute that "
@@ -739,9 +739,9 @@ class TestCF(BaseTestCase):
         results = self.cf.check_dimensionless_vertical_coordinate(dataset)
 
         result_dict = {result.name: result for result in results}
-        result = result_dict[u'§4.3.2 lev does not contain deprecated units']
+        result = result_dict['§4.3.2 lev does not contain deprecated units']
         assert result.value[0] == result.value[1]
-        result = result_dict[u'§4.3.2 lev has valid formula_terms']
+        result = result_dict['§4.3.2 lev has valid formula_terms']
         assert result.value[0] == result.value[1]
 
         # Check negative compliance
@@ -749,13 +749,13 @@ class TestCF(BaseTestCase):
         results = self.cf.check_dimensionless_vertical_coordinate(dataset)
 
         result_dict = {result.name: result for result in results}
-        result = result_dict[u'§4.3.2 lev1 does not contain deprecated units']
+        result = result_dict['§4.3.2 lev1 does not contain deprecated units']
         assert result.value == (1, 1)
-        result = result_dict[u'§4.3.2 lev1 has valid formula_terms']
+        result = result_dict['§4.3.2 lev1 has valid formula_terms']
         assert result.value == (0, 1)
-        assert result.msgs[0] == u'formula_terms is a required attribute and must be a non-empty string'
+        assert result.msgs[0] == 'formula_terms is a required attribute and must be a non-empty string'
 
-        result = result_dict[u'§4.3.2 lev2 has valid formula_terms']
+        result = result_dict['§4.3.2 lev2 has valid formula_terms']
         assert result.value == (4, 5)
         err_str = "The following variable(s) referenced in formula_terms are not present in the dataset variables: var1, var2, var3"
         self.assertTrue(err_str in result.msgs)
@@ -767,7 +767,7 @@ class TestCF(BaseTestCase):
         # create a malformed formula_terms attribute and check that it fails
         results = self.cf.check_dimensionless_vertical_coordinate(dataset)
         result_dict = {result.name: result for result in results}
-        result = result_dict[u'§4.3.2 lev2 has valid formula_terms']
+        result = result_dict['§4.3.2 lev2 has valid formula_terms']
         self.assertTrue('Attribute formula_terms is not well-formed'
                         in result.msgs)
 
@@ -821,13 +821,13 @@ class TestCF(BaseTestCase):
         dataset = self.load_dataset(STATIC_FILES['illegal-aux-coords'])
         results = self.cf.check_aux_coordinates(dataset)
         result_dict = {result.name: result for result in results}
-        result = result_dict[u"§5.0 Auxiliary Coordinates of h_temp must have a subset of h_temp's dimensions"]
+        result = result_dict["§5.0 Auxiliary Coordinates of h_temp must have a subset of h_temp's dimensions"]
         assert result.value == (2, 4)
         regx = (r"dimensions for auxiliary coordinate variable lat \([xy]c, [xy]c\) are not a subset of dimensions for variable "
                 r"h_temp \(xc\)")
         assert re.match(regx, result.msgs[0]) is not None
 
-        result = result_dict[u"§5.0 Auxiliary Coordinates of sal must have a subset of sal's dimensions"]
+        result = result_dict["§5.0 Auxiliary Coordinates of sal must have a subset of sal's dimensions"]
         assert result.value == (4, 4)
 
     def test_check_grid_coordinates(self):
@@ -836,7 +836,7 @@ class TestCF(BaseTestCase):
         scored, out_of, messages = self.get_results(results)
 
         result_dict = {result.name: result for result in results}
-        result = result_dict[u'§5.6 Grid Feature T is associated with true latitude and true longitude']
+        result = result_dict['§5.6 Grid Feature T is associated with true latitude and true longitude']
         assert result.value == (2, 2)
         assert (scored, out_of) == (2, 2)
 
@@ -852,10 +852,10 @@ class TestCF(BaseTestCase):
 
         result_dict = {result.name: result for result in results}
         # Missing association
-        result = result_dict[u'§5.6 Grid Feature T is associated with true latitude and true longitude']
+        result = result_dict['§5.6 Grid Feature T is associated with true latitude and true longitude']
         assert result.msgs[0] == 'T is not associated with a coordinate defining true latitude and sharing a subset of dimensions'
         # Dimensions aren't a subet of the variables'
-        result = result_dict[u'§5.6 Grid Feature C is associated with true latitude and true longitude']
+        result = result_dict['§5.6 Grid Feature C is associated with true latitude and true longitude']
         assert result.msgs[0] == 'C is not associated with a coordinate defining true latitude and sharing a subset of dimensions'
 
     def test_check_reduced_horizontal_grid(self):
@@ -863,17 +863,17 @@ class TestCF(BaseTestCase):
         results = self.cf.check_reduced_horizontal_grid(dataset)
 
         result_dict = {result.name: result for result in results}
-        result = result_dict[u'§5.3 PS is a valid reduced horizontal grid']
+        result = result_dict['§5.3 PS is a valid reduced horizontal grid']
         assert result.value == (7, 7)
 
         dataset = self.load_dataset(STATIC_FILES['bad-rhgrid'])
         results = self.cf.check_reduced_horizontal_grid(dataset)
 
         result_dict = {result.name: result for result in results}
-        result = result_dict[u'§5.3 PSa is a valid reduced horizontal grid']
+        result = result_dict['§5.3 PSa is a valid reduced horizontal grid']
         assert result.value == (6, 7)
         assert result.msgs[0] == "PSa must be associated with a valid longitude coordinate"
-        result = result_dict[u'§5.3 PSb is a valid reduced horizontal grid']
+        result = result_dict['§5.3 PSb is a valid reduced horizontal grid']
         # The dimensions don't line up but another §5.0 check catches it.
         assert result.value == (7, 7)
 
@@ -882,14 +882,14 @@ class TestCF(BaseTestCase):
         results = self.cf.check_grid_mapping(dataset)
 
         result_dict = {result.name: result for result in results}
-        result = result_dict[u'§5.6 Grid Mapping Variable epsg must define a valid grid mapping']
+        result = result_dict['§5.6 Grid Mapping Variable epsg must define a valid grid mapping']
         assert result.value == (7, 8)
         assert result.msgs[0] == 'false_easting is a required attribute for grid mapping stereographic'
 
-        result = result_dict[u'§5.6 Grid Mapping Variable wgs84 must define a valid grid mapping']
+        result = result_dict['§5.6 Grid Mapping Variable wgs84 must define a valid grid mapping']
         assert result.value == (3, 3)
 
-        result = result_dict[u'§5.6 Variable lat defining a grid mapping has valid grid_mapping attribute']
+        result = result_dict['§5.6 Variable lat defining a grid mapping has valid grid_mapping attribute']
         assert result.value == (2, 2)
 
     def test_check_geographic_region(self):
@@ -897,9 +897,9 @@ class TestCF(BaseTestCase):
         results = self.cf.check_geographic_region(dataset)
 
         result_dict = {result.name: result for result in results}
-        result = result_dict[u'§6.1.1 Geographic region specified by neverland is valid']
+        result = result_dict['§6.1.1 Geographic region specified by neverland is valid']
         assert result.value == (0, 1)
-        result = result_dict[u'§6.1.1 Geographic region specified by geo_region is valid']
+        result = result_dict['§6.1.1 Geographic region specified by geo_region is valid']
         assert result.value == (1, 1)
 
     def test_check_packed_data(self):
@@ -953,7 +953,7 @@ class TestCF(BaseTestCase):
         dataset = self.load_dataset(STATIC_FILES['duplicate_axis'])
         results = self.cf.check_duplicate_axis(dataset)
         result_dict = {result.name: result for result in results}
-        result = result_dict[u'§5.0 Variable temp does not contain duplicate coordinates']
+        result = result_dict['§5.0 Variable temp does not contain duplicate coordinates']
         assert result.msgs[0] == 'duplicate axis X defined by lon_rho'
 
     def test_check_multi_dimensional_coords(self):
@@ -965,9 +965,9 @@ class TestCF(BaseTestCase):
         results = self.cf.check_multi_dimensional_coords(dataset)
         scored, out_of, messages = self.get_results(results)
         result_dict = {result.name: result for result in results}
-        result = result_dict[u'§5.0 multidimensional coordinate xlon should not have the same name as dimension']
+        result = result_dict['§5.0 multidimensional coordinate xlon should not have the same name as dimension']
         assert result.msgs[0] == 'xlon shares the same name as one of its dimensions'
-        result = result_dict[u'§5.0 multidimensional coordinate xlat should not have the same name as dimension']
+        result = result_dict['§5.0 multidimensional coordinate xlat should not have the same name as dimension']
         assert result.msgs[0] == 'xlat shares the same name as one of its dimensions'
 
         assert (scored, out_of) == (2, 4)
@@ -985,7 +985,7 @@ class TestCF(BaseTestCase):
         results = self.cf.check_variable_features(dataset)
         scored, out_of, messages = self.get_results(results)
         result_dict = {result.name: result for result in results}
-        result = result_dict[u'§9.1 Feature Type for temperature is valid trajectory']
+        result = result_dict['§9.1 Feature Type for temperature is valid trajectory']
         assert result.msgs[0] == 'temperature is not a trajectory, it is detected as a point'
 
         dataset = self.load_dataset(STATIC_FILES['trajectory-complete'])
@@ -1003,11 +1003,11 @@ class TestCF(BaseTestCase):
         results = self.cf.check_cell_methods(dataset)
         scored, out_of, messages = self.get_results(results)
         result_dict = {result.name: result for result in results}
-        result = result_dict[u'§7.1 temperature has a valid cell_methods attribute format']
+        result = result_dict['§7.1 temperature has a valid cell_methods attribute format']
         assert result
-        result = result_dict[u'§7.3 temperature has valid methods in cell_methods attribute']
+        result = result_dict['§7.3 temperature has valid methods in cell_methods attribute']
         assert result
-        result = result_dict[u'§7.3 temperature has valid names in cell_methods attribute']
+        result = result_dict['§7.3 temperature has valid names in cell_methods attribute']
         assert result
 
         nc_obj = MockTimeSeries()
@@ -1018,14 +1018,14 @@ class TestCF(BaseTestCase):
         results = self.cf.check_cell_methods(nc_obj)
         scored, out_of, messages = self.get_results(results)
         result_dict = {result.name: result for result in results}
-        modifier_results = result_dict[u'§7.3.3 temperature has valid cell_methods modifiers']
+        modifier_results = result_dict['§7.3.3 temperature has valid cell_methods modifiers']
         self.assertTrue(modifier_results.value == (3, 3))
         # modify the cell methods to something invalid
         temp.cell_methods = 'lat: lon: mean depth: mean (interval: x whizbangs)'
         results = self.cf.check_cell_methods(nc_obj)
         scored, out_of, messages = self.get_results(results)
         result_dict = {result.name: result for result in results}
-        modifier_results = result_dict[u'§7.3.3 temperature has valid cell_methods modifiers']
+        modifier_results = result_dict['§7.3.3 temperature has valid cell_methods modifiers']
         self.assertFalse(modifier_results.value == (3, 3))
         self.assertTrue('temperature:cell_methods contains an interval value that does not parse as a numeric value: "x".'
                         in messages)
@@ -1038,7 +1038,7 @@ class TestCF(BaseTestCase):
         temp.cell_methods = 'lon: mean (This is a standalone comment)'
         results = self.cf.check_cell_methods(nc_obj)
         result_dict = {result.name: result for result in results}
-        modifier_results = result_dict[u'§7.3.3 temperature has valid cell_methods modifiers']
+        modifier_results = result_dict['§7.3.3 temperature has valid cell_methods modifiers']
         self.assertTrue(modifier_results.value == (1, 1))
         temp.cell_methods = 'lat: lon: mean depth: mean (invalid_keyword: this is invalid)'
         results = self.cf.check_cell_methods(nc_obj)

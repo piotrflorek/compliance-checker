@@ -40,7 +40,7 @@ class TestSuite(unittest.TestCase):
         score_groups = cs.run(ds, 'cf')
 
         limit = 2
-        for checker, rpair in score_groups.items():
+        for checker, rpair in list(score_groups.items()):
             groups, errors = rpair
             score_list, points, out_of = cs.standard_output(limit, checker, groups)
             # This asserts that print is able to generate all of the unicode output
@@ -55,7 +55,7 @@ class TestSuite(unittest.TestCase):
         score_groups = cs.run(ds, 'cf')
 
         limit = 2
-        for checker, rpair in score_groups.items():
+        for checker, rpair in list(score_groups.items()):
             groups, errors = rpair
             score_list, points, out_of = cs.standard_output(limit, checker, groups)
             # This asserts that print is able to generate all of the unicode output
@@ -89,7 +89,7 @@ class TestSuite(unittest.TestCase):
         vals = cs.run(ds, 'cf')
 
         limit = 2
-        for checker, rpair in vals.items():
+        for checker, rpair in list(vals.items()):
             groups, errors = rpair
             score_list, cdl_points, cdl_out_of = cs.standard_output(limit, checker, groups)
             # This asserts that print is able to generate all of the unicode output
@@ -101,7 +101,7 @@ class TestSuite(unittest.TestCase):
         vals = cs.run(ds, 'cf')
 
         limit = 2
-        for checker, rpair in vals.items():
+        for checker, rpair in list(vals.items()):
             groups, errors = rpair
             score_list, nc_points, nc_out_of = cs.standard_output(limit, checker, groups)
             # This asserts that print is able to generate all of the unicode output

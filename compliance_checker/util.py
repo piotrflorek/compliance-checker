@@ -7,7 +7,7 @@ import datetime
 
 def isstring(obj):
     try:
-        return isinstance(obj, basestring)
+        return isinstance(obj, str)
     except NameError:
         return isinstance(obj, str)
 
@@ -50,5 +50,5 @@ def dateparse(date_str):
     :param str date_str: An ISO-8601 string
     '''
 
-    return datetime.datetime(*map(int, re.split('[^\d]', date_str)[:-1]))
+    return datetime.datetime(*list(map(int, re.split('[^\d]', date_str)[:-1])))
 

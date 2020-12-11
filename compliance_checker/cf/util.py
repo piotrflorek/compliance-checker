@@ -1,4 +1,4 @@
-from __future__ import print_function
+
 import itertools
 import requests
 import os
@@ -384,7 +384,7 @@ def map_axes(dim_vars, reverse_map=False):
     ret_val = defaultdict(list)
     axes = ['X', 'Y', 'Z', 'T']
 
-    for k, v in dim_vars.items():
+    for k, v in list(dim_vars.items()):
         axis = getattr(v, 'axis', '')
         if not axis:
             continue

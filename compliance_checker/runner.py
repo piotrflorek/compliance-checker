@@ -1,4 +1,4 @@
-from __future__ import print_function
+
 
 import traceback
 import sys
@@ -100,7 +100,7 @@ class ComplianceChecker(object):
         @param limit        The degree of strictness, 1 being the strictest, and going up from there.
         '''
 
-        for checker, rpair in score_groups.items():
+        for checker, rpair in list(score_groups.items()):
             groups, errors = rpair
             score_list, points, out_of = cs.standard_output(limit, checker, groups)
             if not verbose:
@@ -119,7 +119,7 @@ class ComplianceChecker(object):
         @param ds_loc          Location of the source dataset
         @param limit           The degree of strictness, 1 being the strictest, and going up from there.
         '''
-        for checker, rpair in score_groups.items():
+        for checker, rpair in list(score_groups.items()):
             groups, errors = rpair
             if output_filename == '-':
                 f = io.StringIO()
@@ -168,12 +168,12 @@ class ComplianceChecker(object):
         @param verbose      Integer value for verbosity level
         '''
         errors_occurred = False
-        for checker, rpair in score_groups.items():
+        for checker, rpair in list(score_groups.items()):
             errors = rpair[-1]
             if len(errors):
                 errors_occurred = True
                 print("WARNING: The following exceptions occured during the %s checker (possibly indicate compliance checker issues):" % checker, file=sys.stderr)
-                for check_name, epair in errors.items():
+                for check_name, epair in list(errors.items()):
                     print("%s.%s: %s" % (checker, check_name, epair[0]), file=sys.stderr)
 
                     if verbose > 0:
